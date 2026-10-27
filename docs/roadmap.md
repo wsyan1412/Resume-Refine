@@ -1,114 +1,69 @@
 # Delivery roadmap
 
-The milestones describe deliverables and completion criteria, not fixed calendar estimates. Select an approach before estimating implementation effort. A single-job prototype is an intermediate milestone; the first useful release must also address the repeated multi-job workflow.
+Updated 28 October 2026. Website first, shared-editor extension later. This remains a plan; implementation has not started.
 
-## 0. Select the product direction and establish GitHub
+## 1. Homepage and one-job interaction
 
-Deliverables:
+Build responsive resume/job cards, a generation action, and a result area. Start with pasted text and fictional results to check the interaction before paying for AI.
 
-- Choose web, extension-led, desktop, or personal workflow.
-- Confirm whether the first audience is the creator, public portfolio visitors, or invited users.
-- Reuse the existing private `wsyan1412/Resume-Refine` repository.
-- Publish planning documents; create roadmap issues and estimate milestones after platform selection.
-- Select implementation stack, AI provider, operating budget, and first supported job source.
+Done when the sequence is understandable without signup or a profile wizard, mobile/keyboard use works, and errors are clear.
 
-Complete when the repository exists on the intended profile and its README accurately describes the project stage. Until connected publication is verified, do not claim GitHub setup is complete.
+## 2. Complete one real resume
 
-Suggested issue: `Choose the first-release platform and audience`.
+Add browser-side PDF/DOCX imports, extraction preview, structured AI suggestions, the changes editor, direct editing, undo, and clean PDF/DOCX exports. Use one template and tab-memory state.
 
-## 1. Import once and create a verified profile
+Acceptance:
+- Extraction preserves associations; uncertain reading order is visible.
+- Image-only PDFs offer a paste fallback.
+- A normal visitor needs no login or API key.
+- Unsupported skills/metrics are flagged rather than added.
+- Source IDs, locked fields, meaningful accept/reject, moved bullets, and manual edits work.
+- Exports match accepted content, exclude review marks, and have readable page breaks.
+- PDF text is selectable; DOCX is editable.
 
-Deliverables:
+## 3. Multiple jobs within the open tab
 
-- Pasted text, DOCX, and text-based PDF import.
-- Section and bullet confirmation screen.
-- User-editable master profile, source references, and immutable versions.
-- Job paste and document import with an editable preview.
+Reuse one unchanged original across a list of roles. Add bounded concurrency, per-job states, cancellation, explicit retries, and independent review/downloads.
 
-Acceptance criteria:
+Acceptance:
+- A synthetic 50-job run keeps companies, descriptions, edits, and results isolated.
+- Failed jobs do not discard successful ones; duplicate clicks do not launch the same in-session job twice.
+- Rate limits pause pending work with clear feedback.
+- Every role starts from the original.
+- Refresh returns to an empty workspace; no content is recovered from persistent storage.
+- Closing the page does not promise later completion or recovery.
 
-- Import fictional examples with columns, missing sections, and unusual date formats.
-- An image-only PDF produces a clear fallback instead of a silently empty profile.
-- Contact information, employment dates, titles, and degrees can be corrected and locked.
-- Confirmed data survives reopening; another user's data is never accessible in a hosted setup.
+## 4. Website beta
 
-Suggested issues:
+Add an initial supported public job-link source and job PDF/DOCX imports. Validate privacy, anonymous operation, performance, exports, and real costs.
 
-- `Import resume text, DOCX, and selectable-text PDF`
-- `Confirm extracted sections and save profile versions`
-- `Import and confirm a job description`
+Acceptance:
+- Supported links show previews; failures offer paste.
+- Unsafe URLs/redirects are rejected; size/time limits apply.
+- Keys stay out of client bundles and Git.
+- No content enters persistent browser/server storage, app logs, or analytics.
+- Provider handling/retention statements match actual settings.
+- Server-side request/token limits, a global budget ceiling, and a kill switch work.
+- Budget alerts are not described as hard caps; concurrency is accounted for.
+- Measure latency and usage before publishing speed/cost claims.
+- Public demos use fictional data.
 
-## 2. Complete one trustworthy tailoring flow
+ZIP downloads of reviewed results can follow the core batch flow.
 
-Deliverables:
+## 5. Browser extension
 
-- Requirement-to-experience mapping and gap reporting.
-- Structured rewrite suggestions with source references.
-- Inline and side-by-side changes, individual accept/reject, direct editing, and undo.
-- One clean resume template with PDF and DOCX export.
+Capture on user action, preview the job, and open the same editor packaged as a full-tab extension page.
 
-Acceptance criteria:
+Acceptance:
+- Explicitly supported sites, minimal permissions, and validated messaging.
+- Editor/document/export logic is reused.
+- Sender and receiver handshake prevents silent capture loss when a background worker suspends.
+- Resume upload is once per active editor session, without login or a persistent profile.
+- The same generation limits apply.
+- No automatic submissions or LinkedIn scraping.
 
-- A fictional job requiring an absent skill flags the gap without adding that skill.
-- Attempts to invent metrics, change employers, or modify locked dates are rejected or sent back for review.
-- Moved bullets appear as moves rather than unexplained deletions and additions.
-- Rejecting a suggestion restores the previous text; regeneration preserves manual edits unless explicitly replaced.
-- Exported PDF has selectable text; DOCX remains editable; both reflect the accepted content and contain no review markup.
-- Visual export review covers long bullets, links, punctuation, page breaks, and overflowing content.
+## Verification and scheduling
 
-Suggested issues:
+Use Vitest for parsing, source mappings, validation, diffs, and queue transitions. Use Playwright for single/multi-job flows and accidental-persistence checks. Visually inspect exports, overflow, long bullets, links, and page breaks.
 
-- `Generate source-linked suggestions and flag unsupported requirements`
-- `Build review editor with word-level changes and undo`
-- `Export clean PDF and editable DOCX from one document model`
-
-## 3. Make repeated applications efficient
-
-Deliverables:
-
-- Import a supported public job URL with preview, plus immediate paste fallback.
-- Add multiple jobs; detect duplicate entries.
-- Background generation queue, per-job status, cancellation, bounded retries, and resume after interruption.
-- Separate version history and exports for each company and role.
-- Usage measurement and a batch spending limit.
-
-Acceptance criteria:
-
-- A 50-job synthetic batch keeps company names, requirements, and drafts isolated.
-- One failed fetch or generation does not discard other results.
-- Retrying a job does not duplicate an already completed draft.
-- An expired URL retains the saved description used for that draft.
-- An interrupted batch can resume without starting successful jobs again.
-- Record a manual baseline and compare the time needed to produce 10 reviewed resumes with the tool. Treat time saved as measured evidence, not a marketing assumption.
-
-Suggested issues:
-
-- `Import supported public job URLs with a paste fallback`
-- `Queue multiple jobs and isolate their drafts`
-- `Retry, cancel, and resume jobs without duplicate work`
-- `Record per-job usage and enforce batch caps`
-
-## 4. Prepare a safe portfolio demonstration or invited beta
-
-Deliverables:
-
-- Fictional demo profile and job descriptions.
-- Account isolation and private storage before hosting real resumes.
-- Retention/deletion controls, safe URL fetching, input limits, and minimal content-free logs.
-- Accessibility review for change indicators and keyboard editing.
-- Screenshots, setup instructions, environment-variable template without secrets, and a concise architecture overview.
-- Automated checks for the critical import, factual constraints, revision, queue, and export paths.
-
-Complete when the end-to-end demo works, first-release criteria pass, and documentation clearly states supported inputs, supported job sites, and known limitations.
-
-Suggested issue: `Prepare fictional demo and validate hosted privacy boundaries`.
-
-## Later extensions, ranked after usage feedback
-
-1. CSV import and bulk export of approved versions.
-2. Browser extension for user-initiated job capture on supported sites.
-3. OCR for scanned resumes and screenshot job descriptions.
-4. Google Docs import/export and richer templates.
-5. Desktop packaging or local-model mode if users need it.
-
-Re-rank these using observed friction rather than implementing every integration at once.
+Estimate calendar time after a real import/generation/export spike. A UI mockup alone does not validate factual generation quality or export reliability.

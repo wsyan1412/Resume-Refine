@@ -1,40 +1,35 @@
 # Resume Refine
 
-Planning-stage project for turning one verified career profile into editable, role-specific resumes with visible changes.
+A responsive website for uploading one resume, tailoring it to one or several jobs, reviewing visible changes, and downloading the results.
 
-**Status:** Proposal only. No application, AI integration, or hosted service has been implemented. The product approach is awaiting selection.
+**Status:** Targeted plan, updated 28 October 2026. The user selected the website first and a browser extension with the shared editor later. No application or paid service has been implemented.
 
-**Repository:** [wsyan1412/Resume-Refine](https://github.com/wsyan1412/Resume-Refine) (private).
+**Repository:** [wsyan1412/Resume-Refine](https://github.com/wsyan1412/Resume-Refine) (public, verified 28 October 2026).
 
-## The problem
+## Product direction
 
-Applying for many jobs repeats the same work: upload a resume, copy a job description, ask for a rewrite, check what changed, fix formatting, and save the right version. This project should make that a reusable workflow while keeping the applicant in control of every claim.
+- Put resume input, job input, and a clear generation action on the homepage.
+- Support a one-time visitor without registration or profile setup.
+- Reuse one unchanged original resume for several roles during an open tab.
+- Highlight changes, allow direct editing, and export clean PDF and editable DOCX.
+- Keep working documents in tab memory; do not build login, saved profiles, a resume database, or application history.
+- Add supported-site job capture through a browser extension later, reusing the editor and generation service.
 
-## Proposed experience
-
-1. Import a resume once and confirm the extracted information.
-2. Build a reusable master profile of experience, projects, skills, and achievements.
-3. Add one or many jobs by pasted description, supported public URL, or document.
-4. Generate a separate draft for each job from the selected master profile version.
-5. Review highlighted edits, accept or reject suggestions, and edit directly.
-6. Preview and download a clean PDF or editable DOCX; keep the exact version used for each application.
+Refreshing or closing the page discards the working session. Downloads remain on the user's device. Cloud AI sends selected text to a provider; no app-saved history is not a promise of zero third-party retention.
 
 ## Planning documents
 
-- [Product proposal and alternatives](docs/product-plan.md)
-- [Milestones and acceptance criteria](docs/roadmap.md)
-- [Decisions and GitHub setup](docs/decisions.md)
+- [Targeted product plan](docs/product-plan.md)
+- [Recommended stack and cost assumptions](docs/tech-stack.md)
+- [Delivery roadmap](docs/roadmap.md)
+- [Confirmed decisions](docs/decisions.md)
 
-## Recommendation
+## Recommended stack
 
-Start with a responsive web application, then consider a browser extension for capturing jobs from supported sites. A desktop application is an alternative if local file handling and local storage matter more than easy access across devices.
+React + TypeScript + Vite + Tailwind CSS, Tiptap's open-source editor with a custom changes interface, browser-side imports/exports, and a small Hono API on Cloudflare Workers. Evaluate a low-cost cloud model for the public website; requiring a local AI installation would add friction for one-time visitors.
+
+These are implementation recommendations. No service has been purchased. Hosting should start within free allowances; cloud AI remains a variable usage expense.
 
 ## Repository boundaries
 
-Only source code, planning documents, and fictional examples belong in this repository. Real resumes, job-search exports, user documents, and credentials must remain outside Git. A private repository does not replace this separation.
-
-The initial `.gitignore` provides basic exclusions; it is not a data-loss prevention mechanism. Review staged files before every push.
-
-## GitHub status
-
-Prepared on 27 October 2026 for the existing private repository on `wsyan1412`'s profile. The platform choice remains open; this repository starts with planning documents and roadmap issues. Implementation will follow the selected approach.
+Commit source, plans, and fictional examples only. Keep real resumes, generated application files, and credentials outside Git. Review staged files even when a gitignore rule appears to cover them.

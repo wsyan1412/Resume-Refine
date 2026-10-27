@@ -1,151 +1,114 @@
-# Product proposal
+# Targeted product plan
 
-Prepared 27 October 2026. This is a proposal, not a commitment to a platform or implementation stack.
+Updated 28 October 2026. This supersedes the earlier platform comparison and persistent-master-profile proposal.
 
-## Purpose
+## Selected direction
 
-Reduce the repeated work involved in tailoring resumes for 50 or more applications while keeping factual claims accurate and each result easy to review, edit, and export.
+Build a responsive website first, then a browser extension with the shared editor. Serve both a visitor tailoring one resume for one job and a visitor tailoring the same resume for many roles.
 
-The central asset is a reusable, user-verified master profile. A resume is one presentation of that profile. Each job receives its own draft, derived from a recorded profile version and a saved job description. Do not repeatedly rewrite the previously tailored resume: this can gradually introduce drift and lose useful experience.
+There is no registration, login, saved profile, resume database, or application history. A returning visitor uploads or pastes again. Within the open tab, one unchanged original can serve all jobs.
 
-## Product approaches
+## Homepage: use the tool immediately
 
-| Approach | Advantages | Disadvantages | When to choose it |
-| --- | --- | --- | --- |
-| A. Responsive web application | No installation; roomy editor and comparison view; access across devices; straightforward portfolio demo | Requires hosting and protection of stored personal data; website access to some job pages will fail | Best overall starting point for a product that others can use |
-| B. Browser extension with web editor | Capture a job while browsing; less switching between tabs; share the same profile and generation service | Browser permissions, distribution, site-specific maintenance, and site restrictions; a small popup is a poor document editor | Add after the web workflow proves useful, or prioritize if job capture is the dominant problem |
-| C. Desktop application | Convenient local folders and exports; can store profiles locally; possible later local-model support | Installation, signing, updates, and operating-system support; local storage alone does not keep cloud AI requests on the device | Choose when local storage or offline operation is a primary requirement |
-| D. Small personal workflow tool | Fastest route to testing the core idea; a local form or command-line tool can process a folder or job list | Less approachable for other users; weaker interactive review unless an editor is also built | Choose to solve the creator's own search first with limited development time |
-| E. Native mobile application | Convenient camera upload and job saving on a phone | Precise resume editing and comparison are awkward on a small screen; separate platform effort | Consider later if actual users mostly work on phones |
+Put the form near the top, before long explanations. Use a short headline such as "Tailor your resume to the job" and a simple sequence: add resume, add job, review and download.
 
-Recommendation: A first, B later. A web application can eventually offer an installable shortcut, but that should not be presented as a promise of offline AI generation.
+On desktop, show two cards side by side; stack them on mobile:
 
-## Resume input
+| Your resume | Job details |
+| --- | --- |
+| Upload PDF / DOCX or paste text | Paste a description or enter a supported job link |
+| File name and short extraction preview | Company / role and short description preview |
+| Inspect extracted text or replace file | Add another job as a secondary action |
 
-| Input | Priority | Behavior and limitations |
-| --- | --- | --- |
-| Pasted text | First release | Always-available fallback; show detected sections for confirmation |
-| DOCX upload | First release | Import text and structure; do not assume arbitrary Word formatting can be preserved |
-| Text-based PDF upload | First release | Extract selectable text; confirm reading order, especially with columns and tables |
-| Manual profile entry and extra project notes | First release | Capture useful verified experience that did not fit on the original resume |
-| Multiple resumes | Later improvement | Merge into the master profile with conflict and duplicate review; never silently combine conflicting facts |
-| Scanned PDF, photo, or screenshot | Later improvement | OCR, meaning text recognition from images; flag uncertain text and require correction before generation |
-| Google Docs / Drive | Later integration | Explicitly connect and select a document; use the same extraction-and-confirmation flow |
-| Markdown, plain-text file, structured profile backup | Later convenience | Useful for technical users and moving data between installations |
-| Applicant-provided LinkedIn export | Later convenience | Evaluate supported export formats; do not depend on scraping a LinkedIn profile URL |
+One primary action: **Tailor my resume**. With several jobs, label it **Generate 3 resumes**, using the actual count.
 
-Keep the original document available for reference. Import into a structured profile with stable section and bullet identifiers, then render tailored resumes using a small set of controlled templates.
+Keep job-document upload available as a secondary input. Provide accessible labels and a file-picker alternative to drag-and-drop. Place examples and FAQs below the form.
 
-First-release formatting promise: clean, predictable templates, not perfect reproduction of every uploaded design. Explain this before import. A future template-preservation feature is a separate problem.
+A successful import should not force a profile-building wizard. Ask for correction when extraction is empty, reading order is uncertain, or section associations are unreliable. Show genuine processing stages rather than a fabricated percentage or a guaranteed completion time. Load heavy editor and export libraries only when needed.
 
-## Job description input
+Explain beside generation that the app does not save a resume history and selected text is sent for AI processing. The interface should not claim that cloud AI runs entirely on the user's device.
 
-| Input | Priority | Behavior and limitations |
-| --- | --- | --- |
-| Pasted description | First release | Reliable fallback; extract company, title, responsibilities, and requirements for confirmation |
-| Public job URL | First release, supported sites only | Fetch a supported public page, show extracted text, and save its source URL and retrieval time |
-| PDF or DOCX description | First release | Reuse document parsing; preview the extracted description |
-| Several URLs or pasted descriptions | First release batch workflow | Give each job its own record; show duplicates and import failures individually |
-| Manual role brief | First release | Company and title plus user-entered responsibilities when no full description exists |
-| CSV import | Later improvement | Suggested columns: company, title, url, description; validate rows and deduplicate before queuing |
-| Screenshot / image | Later improvement | OCR with confirmation; useful when copying text is difficult |
-| Browser capture | Later extension | User-initiated capture on supported sites; present the captured description before saving |
-| Recruiter email or share-to-app | Later integration | Start with pasted email text; direct inbox access adds permissions and scope |
+## Inputs and first-release scope
 
-Public URL extraction should try a documented job-board API where supported, then structured `JobPosting` data, then page text on supported sites. Some hiring systems expose public job data: Greenhouse documents unauthenticated GET access to its Job Board API. Google documents a `description` field within `JobPosting` structured data.
+Resume: pasted text, selectable-text PDF, and DOCX. Read files in the browser and offer an extraction preview. Image-only PDFs get a clear paste fallback; OCR is deferred.
 
-Do not promise that every hiring-site link works. Login requirements, unavailable pages, dynamic content, and source restrictions can make extraction fail. Offer pasted text or an uploaded description immediately. Save a snapshot so a disappearing listing does not erase the context for an application.
+Job: paste first, followed by supported public links and PDF/DOCX input before the website beta is complete. Preview extracted descriptions and offer paste immediately when a link fails.
 
-LinkedIn explicitly prohibits third-party scraping and certain automated activity. Exclude LinkedIn scraping from the proposed integrations. A browser permission is technical access, not permission from the source website to collect its content.
+Start links with one documented public job-board source, such as Greenhouse. Restrict destinations and redirects and apply size/time limits. Do not forward browser credentials or include LinkedIn scraping. Universal job-site support and expensive browser rendering are outside the initial scope.
 
-## Core workflow
+Use one clean output template. Importing content does not promise exact reproduction of arbitrary PDF/Word layouts.
 
-### 1. Import and confirm once
+## Single-job experience
 
-Extract a resume into a master profile. Ask the user to correct uncertain sections, dates, employer names, and bullet associations. Add a library of verified achievements and projects. Allow locked facts and sections.
+1. Supply a resume and job description on the homepage.
+2. Read and validate inputs; preserve the original in tab memory.
+3. Generate structured suggestions for that role.
+4. Show changes in the review editor.
+5. Accept/reject suggestions, edit directly, and undo.
+6. Preview and download clean PDF or editable DOCX.
 
-Every factual item should keep a source reference: original resume text, an imported document, or a later user-confirmed addition. A source link helps review but does not prove that an AI rewrite preserves the meaning; validation and user review remain necessary.
+A normal visitor needs no account, API key, dashboard, template-selection wizard, or permanent master profile.
 
-### 2. Add and inspect jobs
+## Multiple roles in the same session
 
-Accept one job or a batch. Show an editable description preview before generation. Distinguish must-have requirements from preferences, and identify which requirements have supporting experience. Missing requirements become gaps or questions; they must not become invented qualifications.
+**Add another job** expands a list within the same workflow. Give each role its own label, progress, suggestions, edits, and downloads.
 
-### 3. Generate separate suggestions
+Always start from the original resume, never from another role's generated version. Editing a result affects only that role. Replacing the original must clearly invalidate or separate earlier results.
 
-Select relevant existing experience, adjust emphasis, reorder sections or bullets, and propose clearer phrasing. Never invent achievements, metrics, technologies, years of experience, credentials, or duties. Keep employer names, actual titles, dates, and degrees fixed unless the user explicitly edits them.
+Queue jobs in browser memory with one or two requests active initially. Allow per-job cancellation, explicit retries, and removal. One failure must not erase other results. Avoid unlimited automatic retries. A retry following an uncertain network result can create another provider charge because this design has no persisted server-side result cache.
 
-Any new claim requires the user's confirmation and a source entry before it can be added to the master profile. User approval of one tailored draft does not silently change the master profile.
+Design the list for 50 jobs; validate smaller batches first. Completed jobs can be reviewed while others run. A rate-limit response should pause pending work and explain when it can retry. Set eventual limits using measured costs rather than silently limiting the product to one application.
 
-Start each generation from the chosen master profile version. Record that version and the job snapshot. Regenerating a section creates a new draft revision and must not overwrite manual edits without a choice.
+Refreshing or closing the tab discards the workspace. There is no background completion after closing, saved queue, or cross-device recovery. Show a short session notice, an explicit **Clear session** action, and a leaving-page warning where supported. Downloaded files remain on the device.
 
-### 4. Review changes
+Provide individual downloads first. ZIP export of selected reviewed results can follow after the website batch flow is reliable.
 
-Provide both an inline changes view and a side-by-side comparison with the selected base resume.
+## Grounded generation
 
-- Mark additions, deletions, replacements, and moved content separately.
-- Use labels, symbols, and strike-through as well as color for accessibility.
-- For each suggestion, show the before text, proposed text, relevant job requirement, and supporting experience.
-- Let the user accept or reject each suggestion or a selected group.
-- Support undo, direct editing, saved revisions, and regeneration of a selected section.
-- Keep a clean preview alongside the review mode.
+Represent the source as sections and blocks with stable identifiers. Keep factual text linked to its original blocks during the session. This is internal structure, not a saved user profile.
 
-Example: an existing bullet about implementing a REST API may be rephrased to emphasize backend development when relevant. It must not acquire a database, performance improvement, or leadership claim that the user never provided.
+The AI may improve wording, select relevant experience, and propose ordering changes. Preserve actual employers, job titles, dates, credentials, metrics, and claims unless the user explicitly edits them. Missing qualifications become gaps or questions, not invented resume entries.
 
-Distinguish wording changes from selection and ordering changes. Compare against the immutable imported resume or a named base version, not only against the last AI output. Preserve that baseline after manual edits.
+Request structured suggestions with source IDs. Validate response shape, references, locked fields, numbers, and size. Treat job and resume content as data, not instructions overriding these rules. Source links and schema checks help review but cannot guarantee semantic accuracy.
 
-### 5. Export and track
+Keep contact fields local where reliably identified and restore them when rendering. Other text may still identify the applicant; do not describe this as complete anonymization.
 
-Export a clean PDF with selectable text and an editable DOCX from the same accepted document structure. Do not include highlights or review comments in the normal download. Offer a separate comparison export later.
+## Changes and editing
 
-Provide page-size, length, and spacing controls with overflow warnings. Start with one simple template. Test reading order and exports, but do not claim universal applicant-tracking-system acceptance or a guaranteed interview benefit.
+Use side-by-side views on desktop and labeled tabs on mobile. Offer **Show changes / Clean preview**.
 
-Save filenames such as `Name_Company_Role_Resume_v2.pdf`. Keep the company, role, source link, draft state, export version, and optional application date together. Marking an application as submitted is a user action; this project does not submit applications in the first release.
+- Word-level additions/deletions, moved-block indicators, and labels beyond color alone.
+- Accept/reject individual suggestions and a deliberate bulk action.
+- Direct editing, undo, and section regeneration without silently replacing manual edits.
+- An immutable original, plus separate attribution for AI suggestions and later manual edits.
 
-## Handling 50 or more jobs
+Start with block/bullet-level accept/reject and word-level visual highlighting. A complete word-processor revision engine is outside the first iteration. Recompute stale suggestions after manual edits rather than applying outdated text positions.
 
-Batch support is part of the first useful release, after the single-job path works.
+## Downloads
 
-- Queue a list of jobs against one profile snapshot; keep each draft isolated.
-- Show queued, generating, ready for review, failed, approved, and exported states.
-- Limit concurrent generation, retry temporary failures, and allow cancellation or resumption.
-- Make repeated actions safe so retrying does not create duplicate drafts or duplicate charges within the app's control.
-- Estimate batch usage before starting once a provider and model have been measured; allow a user-set usage cap.
-- Review and export per job; bulk generation does not imply bulk approval.
-- Treat a changed source listing as a new snapshot, not a silent replacement of an existing draft's context.
+Generate PDF and DOCX in the browser from the same reviewed content model. Normal downloads exclude change markup. Use company/role filenames.
 
-## Architecture proposal
+Start with a single-column template, A4/Letter choice, spacing controls, and overflow feedback. Preview the actual PDF layout. PDF text must be selectable; DOCX must remain editable. Word pagination can differ even when content matches.
 
-Use the same content and generation core regardless of whether the interface is web, extension, or desktop:
+## Data lifecycle and anonymous operation
 
-`Import -> Confirmed profile -> Saved job snapshot -> Suggested edits -> Reviewed document -> PDF / DOCX`
+Keep source files, extracted text, jobs, and drafts in tab memory. Do not preserve documents in localStorage, IndexedDB, sessionStorage, cookies, server buckets, or a database. Use no-store headers for content and exclude bodies from logs/analytics.
 
-Conceptual records: `ProfileVersion`, `SourceItem`, `JobSnapshot`, `DraftRevision`, `ChangeSuggestion`, and `ExportRecord`.
+The API handles the current request and returns its result. AI and hosting providers have their own processing/retention policies; verify and explain these before beta. Avoid "nothing is ever stored anywhere" claims.
 
-For approach A, use a browser editor, a server-side generation service, a database for versions, private storage for originals and exports, and a bounded background queue for batches. Keep AI-provider credentials on the server. Select the exact framework, hosting service, and model after confirming budget, preferred language, and whether this serves one person or multiple users.
+Anonymous paid generation needs server-enforced size/token limits, throttling, a global budget ceiling, and a kill switch. A challenge can appear for suspicious traffic. Expiring operational counters may support these controls, but must contain no document content. CORS alone cannot control spending.
 
-Use structured model output tied to source identifiers rather than asking for an opaque replacement document. Validate the schema, locked fields, numbers, and source references before presenting suggestions. These checks reduce errors; they cannot guarantee that every semantic distortion is detected.
+## Later extension
 
-## Privacy, reliability, and cost
+After testing the website, add user-initiated job capture on supported sites. Preview the capture, open the shared full-tab editor, supply a resume if needed for that active editor session, and use the same review/export workflow.
 
-Resumes contain personal information. Before a hosted beta, implement account isolation, private files, encrypted transport and storage, file-size/type limits, clear retention choices, and deletion. Explain which content is sent to the selected AI provider and its applicable retention settings. Do not claim local-only processing when using a remote model.
+Bundle the editor as an extension page so capture can use validated extension messaging without server-side document storage. Establish the receiver before sending, keep the capture source until acknowledgement, and do not depend on a background service worker remaining alive.
 
-Keep document content out of routine logs and analytics. Keep real documents and keys out of GitHub even if the code is public. Use fictional people and jobs for demonstrations. Define how deletion applies to originals, derived drafts, exports, and backup expiry.
+Reuse document types, validation, editor components, imports/exports, and the generation API. Keep permissions minimal. Do not add automatic applications, unrestricted scraping, credential collection, or persistent resume storage. The website remains usable without an extension.
 
-Treat resume text, job descriptions, and fetched pages as untrusted input, never as instructions that can override the tailoring rules. Restrict URL fetching to safe public destinations and re-check redirects; apply timeouts and download limits. Validate uploaded documents and sanitize exported content.
+## Integration references
 
-Reuse a parsed profile and extracted job snapshot rather than repeating work. Record generation usage by job. Prices cannot be estimated credibly until the model, prompt size, retry rate, OCR use, and hosting choice are known. Measure a 10-job pilot and extrapolate to 50 before promising a price.
-
-## First-release boundaries
-
-Include: reusable profile; text/PDF/DOCX import; supported job links and paste fallback; a per-job queue; grounded suggestions; visible changes; direct editing; clean PDF and DOCX export; saved versions.
-
-Defer: automatic application submission, unrestricted site scraping, mobile-native apps, inbox integrations, cover letters, arbitrary template preservation, and unvalidated numerical "ATS scores."
-
-## Sources checked
-
-- [Greenhouse Job Board API](https://docs.greenhouse.io/job-board.html): public GET endpoints and job content.
-- [Google JobPosting structured data](https://developers.google.com/search/docs/appearance/structured-data/job-posting): job-description metadata.
-- [Chrome activeTab permission](https://developer.chrome.com/docs/extensions/develop/concepts/activeTab): temporary page access after user invocation for a possible later extension.
-- [LinkedIn prohibited software and extensions](https://www.linkedin.com/help/linkedin/answer/a1341387/prohibition-of-scraping-software): integration constraint.
-
-These sources support the integration facts. Product scope, priorities, and platform rankings above are design recommendations.
+- [Greenhouse Job Board API](https://docs.greenhouse.io/job-board.html)
+- [LinkedIn prohibited software](https://www.linkedin.com/help/linkedin/answer/a1341387/prohibition-of-scraping-software)
+- [Chrome activeTab](https://developer.chrome.com/docs/extensions/develop/concepts/activeTab)
+- [Chrome runtime messaging](https://developer.chrome.com/docs/extensions/reference/api/runtime)
