@@ -1,0 +1,36 @@
+# Credentials and local settings
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials.json
+
+# Personal inputs and generated artifacts: keep these out of the source repository
+private/
+data/
+uploads/
+resumes/
+exports/
+*.pdf
+*.doc
+*.docx
+*.csv
+*.sqlite
+*.sqlite3
+*.db
+
+# Common build output and dependencies
+node_modules/
+.next/
+dist/
+build/
+coverage/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Logs and operating-system files
+*.log
+.DS_Store
+Thumbs.db
